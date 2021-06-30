@@ -1,6 +1,7 @@
 package com.sofka.biblioteca.service;
 
 import com.sofka.biblioteca.dto.RecursoDTO;
+import com.sofka.biblioteca.dto.RespuestaDTO;
 import com.sofka.biblioteca.mappers.RecursoMapper;
 import com.sofka.biblioteca.model.Recurso;
 import com.sofka.biblioteca.repositories.RepositorioRecurso;
@@ -22,39 +23,59 @@ public class ServicioRecurso {
     private String strDateFormat = "hh: mm a dd-MMM-aaaa";
     private SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat);
 
-    public String consultarRecurso(String id){
-        var recurso = repositorioRecurso.findById(id);
-        if (recurso.get().getDisponible()) {
-            return "Recurso disponible";
+    public RespuestaDTO consultarRecurso(String id){
+        var recurso = repositorioRecurso.findById(id).get();
+        RespuestaDTO respuestaDTO = new RespuestaDTO();
+        respuestaDTO.setDisponible(recurso.getDisponible());
+        respuestaDTO.setFecha(recurso.getFecha());
+        if (!recurso.getDisponible()) {
+            respuestaDTO.setDescripcion("El recurso no se encuentra disponible su fecha de prestamo fue "+recurso.getFecha());
+            return respuestaDTO;
+        }else{
+            respuestaDTO.setDescripcion("El recurso "+recurso.getNombreRecurso()+" se encuentra disponible");
+            respuestaDTO.setFecha(null);
+            return respuestaDTO;
         }
-        return "el recurso fue prestado en la fecha: "+ recurso.get().getFecha();
     }
 
+   public RespuestaDTO prestarRecurso(String id) {
+       RespuestaDTO respuestaDTO = new RespuestaDTO();
+       Recurso recurso = repositorioRecurso.findById(id).orElseThrow(() -> new RuntimeException("No se encontro el recurso"));
+       if (recurso.getDisponible()) {
+           recurso.setDisponible(false);
+           recurso.setFecha(objSDF.format(objDate));
+           repositorioRecurso.save(recurso);
+           respuestaDTO.setDisponible(false);
+           respuestaDTO.setFecha(objSDF.format(objDate));
+           respuestaDTO.setDescripcion("Recurso obtenido");
 
-    public String prestarRecurso(String id) {
-        var recurso = repositorioRecurso.findById(id);
-        if (recurso.get().getDisponible()) {
-            recurso.get().setDisponible(false);
-            recurso.get().setFecha(objSDF.format(objDate));
-            repositorioRecurso.save(recurso.get());
-            return "recurso obtenido";
+           return respuestaDTO;
+       }
+
+       respuestaDTO.setFecha(objSDF.format(objDate));
+       respuestaDTO.setDescripcion("Recurso no esta disponible");
+       repositorioRecurso.save(recurso);
+       return respuestaDTO;
+
+   }
+
+    public RespuestaDTO devolverRecurso(String id) {
+        RespuestaDTO respuestaDTO = new RespuestaDTO();
+        Recurso recurso = repositorioRecurso.findById(id).orElseThrow(() -> new RuntimeException("No se encontro el recurso"));
+        if(!recurso.getDisponible()){
+            recurso.setDisponible(true);
+            recurso.setFecha(objSDF.format(objDate));
+            repositorioRecurso.save(recurso);
+            respuestaDTO.setDisponible(true);
+            respuestaDTO.setFecha(objSDF.format(objDate));
+            respuestaDTO.setDescripcion("Recurso devuelto con exito");
+
+            return respuestaDTO;
         }
-        return "el recurso no esta disponible";
-
+        respuestaDTO.setFecha(objSDF.format(objDate));
+        respuestaDTO.setDescripcion("El recurso ya esta en el inventario");
+        return respuestaDTO;
     }
-
-    public String devolverRecurso(String id) {
-        var recurso = repositorioRecurso.findById(id);
-        if(!recurso.get().getDisponible()){
-            recurso.get().setDisponible(true);
-            recurso.get().setFecha(objSDF.format(objDate));
-            repositorioRecurso.save(recurso.get());
-            return "recurso devuelto";
-        }
-        return "recurso ya esta en el inventario";
-
-    }
-
 
     public List<RecursoDTO> obtenerTodos() {
         List<Recurso> recursos = (List<Recurso>) repositorioRecurso.findAll();

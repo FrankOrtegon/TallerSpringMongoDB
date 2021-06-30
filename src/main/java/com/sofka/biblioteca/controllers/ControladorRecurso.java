@@ -1,6 +1,7 @@
 package com.sofka.biblioteca.controllers;
 
 import com.sofka.biblioteca.dto.RecursoDTO;
+import com.sofka.biblioteca.dto.RespuestaDTO;
 import com.sofka.biblioteca.repositories.RepositorioRecurso;
 import com.sofka.biblioteca.service.ServicioRecurso;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,27 +18,28 @@ public class ControladorRecurso {
     ServicioRecurso servicioRecurso;
 
     @GetMapping("/consultar/{id}")
-    public ResponseEntity<String> consultarRecurso(@PathVariable String id){
-        var respuesta = servicioRecurso.consultarRecurso(id);
+    public ResponseEntity<RespuestaDTO> consultarRecurso(@PathVariable("id") String id){
+        RespuestaDTO respuesta = servicioRecurso.consultarRecurso(id);
         if(respuesta != null){
-            return  new ResponseEntity<>(respuesta, HttpStatus.OK);
+            return  new ResponseEntity(respuesta, HttpStatus.OK);
         }
-        return new ResponseEntity<>(respuesta, HttpStatus.NOT_FOUND);
+        return new ResponseEntity(respuesta, HttpStatus.NOT_FOUND);
 
     }
 
     @PutMapping("/prestar/{id}")
-    public ResponseEntity<String>prestarRecurso(@PathVariable String id){
-        var respuesta = servicioRecurso.prestarRecurso(id);
+    public ResponseEntity<RespuestaDTO>prestarRecurso(@PathVariable("id") String id){
+        RespuestaDTO respuesta = servicioRecurso.prestarRecurso(id);
         if(respuesta != null){
-            return new ResponseEntity<>(respuesta, HttpStatus.OK);
+            return new ResponseEntity(respuesta, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
+
     @PutMapping("/devolver/{id}")
-    public ResponseEntity<String> devolverRecurso(@PathVariable String id){
-        var respuesta = servicioRecurso.devolverRecurso(id);
+    public ResponseEntity<RespuestaDTO> devolverRecurso(@PathVariable("id") String id){
+        RespuestaDTO respuesta = servicioRecurso.devolverRecurso(id);
         if(respuesta != null){
             return new ResponseEntity<>(respuesta, HttpStatus.OK);
         }
