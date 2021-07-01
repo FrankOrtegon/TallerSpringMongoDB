@@ -2,6 +2,7 @@ package com.sofka.biblioteca.controllers;
 
 import com.sofka.biblioteca.dto.CategoriaDTO;
 import com.sofka.biblioteca.dto.RecursoDTO;
+import com.sofka.biblioteca.dto.TipoRecursoDTO;
 import com.sofka.biblioteca.service.ServicioCRUD;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,7 +17,7 @@ public class ControladorCRUD {
     @Autowired
     ServicioCRUD servicioCRUD;
 
-    //  Controlador del recurso
+    //  Controlador de Recurso
     @GetMapping("/{id}")
     public ResponseEntity<RecursoDTO> findbyId(@PathVariable("id") String id) {
         return new ResponseEntity<>(servicioCRUD.obtenerPorId(id), HttpStatus.OK);
@@ -51,7 +52,7 @@ public class ControladorCRUD {
         }
     }
 
-    //Controlador de categoria
+    //Controlador de Categoria
 
     @PostMapping("/crearcategoria")
     public ResponseEntity<CategoriaDTO> crearCategoria(@RequestBody CategoriaDTO categoriaDTO){
@@ -67,5 +68,41 @@ public class ControladorCRUD {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @DeleteMapping("/eliminarcateogria/{id}")
+    public ResponseEntity eliminarCategoria(@PathVariable("id") String id){
+        try{
+            servicioCRUD.eliminarCategoria(id);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch(Exception ex){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
     }
+
+    //Controlador de TipoRecurso
+    @PostMapping("/creartiporecurso")
+    public ResponseEntity<TipoRecursoDTO> crearTipoRecurso(@RequestBody TipoRecursoDTO tipoRecursoDTO){
+        var respuesta = servicioCRUD.crearTipoRecurso(tipoRecursoDTO);
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
+    }
+
+    @PutMapping("/modificartiporecurso")
+    public ResponseEntity<TipoRecursoDTO> modificarTipoRecurso(@RequestBody TipoRecursoDTO tipoRecursoDTO) {
+        if (tipoRecursoDTO.getTipoRecursoId() != null) {
+            return new ResponseEntity<>(servicioCRUD.modificarTipoRecurso(tipoRecursoDTO), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    @DeleteMapping("/eliminartiporecurso/{id}")
+    public ResponseEntity eliminarTipoRecurso(@PathVariable("id") String id){
+        try{
+            servicioCRUD.eliminarTipoRecurso(id);
+            return new ResponseEntity(HttpStatus.OK);
+        }catch(Exception ex){
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+    
+}
+
 

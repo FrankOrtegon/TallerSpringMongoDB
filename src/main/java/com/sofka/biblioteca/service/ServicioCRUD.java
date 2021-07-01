@@ -2,12 +2,16 @@ package com.sofka.biblioteca.service;
 
 import com.sofka.biblioteca.dto.CategoriaDTO;
 import com.sofka.biblioteca.dto.RecursoDTO;
+import com.sofka.biblioteca.dto.TipoRecursoDTO;
 import com.sofka.biblioteca.mappers.CategoriaMapper;
 import com.sofka.biblioteca.mappers.RecursoMapper;
+import com.sofka.biblioteca.mappers.TipoRecursoMapper;
 import com.sofka.biblioteca.model.Categoria;
 import com.sofka.biblioteca.model.Recurso;
+import com.sofka.biblioteca.model.TipoRecurso;
 import com.sofka.biblioteca.repositories.RepositorioCategoria;
 import com.sofka.biblioteca.repositories.RepositorioRecurso;
+import com.sofka.biblioteca.repositories.RepositorioTipoRecurso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Service;
@@ -21,10 +25,14 @@ public class ServicioCRUD {
     RepositorioRecurso repositorioRecurso;
     @Autowired
     RepositorioCategoria repositorioCategoria;
+    @Autowired
+    RepositorioTipoRecurso repositorioTipoRecurso;
 
     RecursoMapper mapper = new RecursoMapper();
     CategoriaMapper mapperCategoria = new CategoriaMapper();
+    TipoRecursoMapper mapperTipoRecurso = new TipoRecursoMapper();
 
+    //Servicios CRUD de Recurso
     public List<RecursoDTO> obtenerTodos() {
         List<Recurso> recursos = (List<Recurso>) repositorioRecurso.findAll();
         return mapper.fromCollectionList(recursos);
@@ -52,7 +60,6 @@ public class ServicioCRUD {
     }
 
     //Servicios CRUD de categoria
-
     public CategoriaDTO crearCategoria(CategoriaDTO categoriaDTO){
         var categoria = repositorioCategoria.save(mapperCategoria.fromDTO(categoriaDTO));
         return mapperCategoria.fromModel(categoria);
@@ -69,6 +76,19 @@ public class ServicioCRUD {
     }
 
     //Servicios CRUD de TipoRecurso
+    public TipoRecursoDTO crearTipoRecurso(TipoRecursoDTO tipoRecursoDTO) {
+        var tipoRecurso = repositorioTipoRecurso.save(mapperTipoRecurso.fromDTO(tipoRecursoDTO));
+        return mapperTipoRecurso.fromModel(tipoRecurso);
+    }
 
+    public  TipoRecursoDTO modificarTipoRecurso(TipoRecursoDTO tipoRecursoDTO){
+        TipoRecurso tipoRecurso = mapperTipoRecurso.fromDTO(tipoRecursoDTO);
+        repositorioTipoRecurso.findById(tipoRecurso.getTipoRecursoId()).orElseThrow(() -> new RuntimeException("Tipo de recurso no encontrado"));
+        return mapperTipoRecurso.fromModel(repositorioTipoRecurso.save(tipoRecurso));
+    }
+
+    public void eliminarTipoRecurso(String id) {
+        repositorioTipoRecurso.deleteById(id);
+    }
 
 }
