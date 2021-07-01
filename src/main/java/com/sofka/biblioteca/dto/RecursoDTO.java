@@ -8,8 +8,8 @@ public class RecursoDTO {
     private boolean disponible;
     private String fecha;
     private String nombreRecurso;
-    private String categoria;
-    private String tipoRecurso;
+    private String categoriaId;
+    private String tipoRecursoId;
 
     public RecursoDTO() {
     }
@@ -27,10 +27,12 @@ public class RecursoDTO {
     }
 
     public void setDisponible(boolean disponible) {
+
         this.disponible = disponible;
     }
 
     public String getFecha() {
+
         return fecha;
     }
 
@@ -46,19 +48,19 @@ public class RecursoDTO {
         this.nombreRecurso = nombreRecurso;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public String getCategoriaId() {
+        return categoriaId;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setCategoriaId(String categoriaId) {
+        this.categoriaId = categoriaId;
     }
 
-    public String getTipoRecurso() {
-        return tipoRecurso;
+    public String getTipoRecursoId() {
+        return tipoRecursoId;
     }
 
-    public void setTipoRecurso(String tipoRecurso) {
-        this.tipoRecurso = tipoRecurso;
+    public void setTipoRecursoId(String tipoRecursoId) {
+        this.tipoRecursoId = tipoRecursoId;
     }
 }

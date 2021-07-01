@@ -16,8 +16,8 @@ public class RecursoMapper {
         recurso.setNombreRecurso(recursoDTO.getNombreRecurso());
         recurso.setFecha(recursoDTO.getFecha());
         recurso.setDisponible(recursoDTO.getDisponible());
-        recurso.setCategoria(recursoDTO.getCategoria());
-        recurso.setTipoRecurso(recursoDTO.getTipoRecurso());
+        recurso.setTipoRecursoId(recursoDTO.getTipoRecursoId());
+        recurso.setCategoriaId(recursoDTO.getCategoriaId());
         return recurso;
     }
 
@@ -28,17 +28,17 @@ public class RecursoMapper {
         recursoDTO.setNombreRecurso(recurso.getNombreRecurso());
         recursoDTO.setFecha(recurso.getFecha());
         recursoDTO.setDisponible(recurso.getDisponible());
-        recursoDTO.setTipoRecurso(recurso.getTipoRecurso());
-        recursoDTO.setCategoria(recurso.getCategoria());
+        recursoDTO.setTipoRecursoId(recurso.getTipoRecursoId());
+        recurso.setCategoriaId(recurso.getCategoriaId());
         return recursoDTO;
     }
 
-    public List<RecursoDTO> fromCollectionList(List<Recurso> collection ) {
-        if(collection == null) {
+    public List<RecursoDTO> fromCollectionList(List<Recurso> listaRecursos ) {
+        if(listaRecursos == null) {
             return null;
         }
-        List<RecursoDTO> list = new ArrayList<>(collection.size());
-        Iterator listTrack = collection.iterator();
+        List<RecursoDTO> list = new ArrayList<>(listaRecursos.size());
+        Iterator listTrack = listaRecursos.iterator();
 
         while (listTrack.hasNext()) {
             Recurso recurso = (Recurso) listTrack.next();

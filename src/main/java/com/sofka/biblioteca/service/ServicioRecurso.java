@@ -1,9 +1,11 @@
 package com.sofka.biblioteca.service;
 
 import com.sofka.biblioteca.dto.RecursoDTO;
-import com.sofka.biblioteca.dto.RespuestaDTO;
+import com.sofka.biblioteca.dto.RespuestaCategoriaDTO;
+import com.sofka.biblioteca.dto.RespuestaRecursoDTO;
 import com.sofka.biblioteca.mappers.RecursoMapper;
 import com.sofka.biblioteca.model.Recurso;
+import com.sofka.biblioteca.repositories.RepositorioCategoria;
 import com.sofka.biblioteca.repositories.RepositorioRecurso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,90 +19,77 @@ public class ServicioRecurso {
 
     @Autowired
     RepositorioRecurso repositorioRecurso;
+    @Autowired
+    RepositorioCategoria repositorioCategoria;
+
     RecursoMapper mapper = new RecursoMapper();
 
     private Date objDate = new Date();
     private String strDateFormat = "hh: mm a dd-MMM-aaaa";
     private SimpleDateFormat objSDF = new SimpleDateFormat(strDateFormat);
 
-    public RespuestaDTO consultarRecurso(String id){
+    public RespuestaRecursoDTO consultarRecurso(String id){
         var recurso = repositorioRecurso.findById(id).get();
-        RespuestaDTO respuestaDTO = new RespuestaDTO();
-        respuestaDTO.setDisponible(recurso.getDisponible());
-        respuestaDTO.setFecha(recurso.getFecha());
+        RespuestaRecursoDTO respuestaRecursoDTO = new RespuestaRecursoDTO();
+        respuestaRecursoDTO.setDisponible(recurso.getDisponible());
+        respuestaRecursoDTO.setFecha(recurso.getFecha());
         if (!recurso.getDisponible()) {
-            respuestaDTO.setDescripcion("El recurso no se encuentra disponible su fecha de prestamo fue "+recurso.getFecha());
-            return respuestaDTO;
+            respuestaRecursoDTO.setDescripcion("El recurso no se encuentra disponible su fecha de prestamo fue "+recurso.getFecha());
+            return respuestaRecursoDTO;
         }else{
-            respuestaDTO.setDescripcion("El recurso "+recurso.getNombreRecurso()+" se encuentra disponible");
-            respuestaDTO.setFecha(null);
-            return respuestaDTO;
+            respuestaRecursoDTO.setDescripcion("El recurso "+recurso.getNombreRecurso()+" se encuentra disponible");
+            respuestaRecursoDTO.setFecha(null);
+            return respuestaRecursoDTO;
         }
     }
 
-   public RespuestaDTO prestarRecurso(String id) {
-       RespuestaDTO respuestaDTO = new RespuestaDTO();
+   public RespuestaRecursoDTO prestarRecurso(String id) {
+       RespuestaRecursoDTO respuestaRecursoDTO = new RespuestaRecursoDTO();
        Recurso recurso = repositorioRecurso.findById(id).orElseThrow(() -> new RuntimeException("No se encontro el recurso"));
        if (recurso.getDisponible()) {
            recurso.setDisponible(false);
            recurso.setFecha(objSDF.format(objDate));
            repositorioRecurso.save(recurso);
-           respuestaDTO.setDisponible(false);
-           respuestaDTO.setFecha(objSDF.format(objDate));
-           respuestaDTO.setDescripcion("Recurso obtenido");
+           respuestaRecursoDTO.setDisponible(false);
+           respuestaRecursoDTO.setFecha(objSDF.format(objDate));
+           respuestaRecursoDTO.setDescripcion("Recurso obtenido");
 
-           return respuestaDTO;
+           return respuestaRecursoDTO;
        }
 
-       respuestaDTO.setFecha(objSDF.format(objDate));
-       respuestaDTO.setDescripcion("Recurso no esta disponible");
+       respuestaRecursoDTO.setFecha(objSDF.format(objDate));
+       respuestaRecursoDTO.setDescripcion("Recurso no esta disponible");
        repositorioRecurso.save(recurso);
-       return respuestaDTO;
+       return respuestaRecursoDTO;
 
    }
 
-    public RespuestaDTO devolverRecurso(String id) {
-        RespuestaDTO respuestaDTO = new RespuestaDTO();
+    public RespuestaRecursoDTO devolverRecurso(String id) {
+        RespuestaRecursoDTO respuestaRecursoDTO = new RespuestaRecursoDTO();
         Recurso recurso = repositorioRecurso.findById(id).orElseThrow(() -> new RuntimeException("No se encontro el recurso"));
         if(!recurso.getDisponible()){
             recurso.setDisponible(true);
             recurso.setFecha(objSDF.format(objDate));
             repositorioRecurso.save(recurso);
-            respuestaDTO.setDisponible(true);
-            respuestaDTO.setFecha(objSDF.format(objDate));
-            respuestaDTO.setDescripcion("Recurso devuelto con exito");
+            respuestaRecursoDTO.setDisponible(true);
+            respuestaRecursoDTO.setFecha(objSDF.format(objDate));
+            respuestaRecursoDTO.setDescripcion("Recurso devuelto con exito");
 
-            return respuestaDTO;
+            return respuestaRecursoDTO;
         }
-        respuestaDTO.setFecha(objSDF.format(objDate));
-        respuestaDTO.setDescripcion("El recurso ya esta en el inventario");
-        return respuestaDTO;
+        respuestaRecursoDTO.setFecha(objSDF.format(objDate));
+        respuestaRecursoDTO.setDescripcion("El recurso ya esta en el inventario");
+        return respuestaRecursoDTO;
     }
 
-    public List<RecursoDTO> obtenerTodos() {
-        List<Recurso> recursos = (List<Recurso>) repositorioRecurso.findAll();
-        return mapper.fromCollectionList(recursos);
+    public RespuestaCategoriaDTO consultarPorCategoria(String categoriaId) {
+        RespuestaCategoriaDTO respuestaCategorias = new RespuestaCategoriaDTO();
+        var categoria = repositorioCategoria.findById(categoriaId).get();
+        var list = repositorioRecurso.findRecursoBycategoriaId(categoriaId);
+        respuestaCategorias.setRecursosCategoria(mapper.fromCollectionList(list));
+        respuestaCategorias.setCategoria(categoria.getNombreCategoria());
+        return respuestaCategorias;
     }
 
-    public RecursoDTO obtenerPorId(String id) {
-        Recurso recurso = repositorioRecurso.findById(id).orElseThrow(() -> new RuntimeException("Recurso no encontrado"));
-        return mapper.fromModel(recurso);
-    }
-
-
-    public RecursoDTO crear(RecursoDTO recursoDTO) {
-        Recurso recurso = mapper.fromDTO(recursoDTO);
-        return mapper.fromModel(repositorioRecurso.save(recurso));
-    }
-
-    public RecursoDTO modificar(RecursoDTO recursoDTO) {
-        Recurso recurso = mapper.fromDTO(recursoDTO);
-        repositorioRecurso.findById(recurso.getId()).orElseThrow(() -> new RuntimeException("Recurso no encontrado"));
-        return mapper.fromModel(repositorioRecurso.save(recurso));
-    }
-
-    public void borrar(String id) {
-        repositorioRecurso.deleteById(id);
-    }
 
 }

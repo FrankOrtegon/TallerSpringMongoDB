@@ -13,8 +13,9 @@ public class Recurso {
     private boolean disponible;
     private String fecha;
     private String nombreRecurso;
-    private String categoria;
-    private String tipoRecurso;
+    private String tipoRecursoId;
+    private String categoriaId;
+
 
     public String getId() {
         return id;
@@ -48,19 +49,19 @@ public class Recurso {
         this.nombreRecurso = nombreRecurso;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public String getTipoRecursoId() {
+        return tipoRecursoId;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setTipoRecursoId(String tipoRecursoId) {
+        this.tipoRecursoId = tipoRecursoId;
     }
 
-    public String getTipoRecurso() {
-        return tipoRecurso;
+    public String getCategoriaId() {
+        return categoriaId;
     }
 
-    public void setTipoRecurso(String tipoRecurso) {
-        this.tipoRecurso = tipoRecurso;
+    public void setCategoriaId(String categoriaId) {
+        this.categoriaId = categoriaId;
     }
 }
