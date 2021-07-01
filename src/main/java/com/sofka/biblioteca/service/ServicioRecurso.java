@@ -3,10 +3,12 @@ package com.sofka.biblioteca.service;
 import com.sofka.biblioteca.dto.RecursoDTO;
 import com.sofka.biblioteca.dto.RespuestaCategoriaDTO;
 import com.sofka.biblioteca.dto.RespuestaRecursoDTO;
+import com.sofka.biblioteca.dto.RespuestaTipoRecursoDTO;
 import com.sofka.biblioteca.mappers.RecursoMapper;
 import com.sofka.biblioteca.model.Recurso;
 import com.sofka.biblioteca.repositories.RepositorioCategoria;
 import com.sofka.biblioteca.repositories.RepositorioRecurso;
+import com.sofka.biblioteca.repositories.RepositorioTipoRecurso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ public class ServicioRecurso {
     RepositorioRecurso repositorioRecurso;
     @Autowired
     RepositorioCategoria repositorioCategoria;
+    @Autowired
+    RepositorioTipoRecurso repositorioTipoRecurso;
 
     RecursoMapper mapper = new RecursoMapper();
 
@@ -89,6 +93,15 @@ public class ServicioRecurso {
         respuestaCategorias.setRecursosCategoria(mapper.fromCollectionList(list));
         respuestaCategorias.setCategoria(categoria.getNombreCategoria());
         return respuestaCategorias;
+    }
+
+    public RespuestaTipoRecursoDTO consultarPorTipoRecurso(String tipoRecursoId) {
+        RespuestaTipoRecursoDTO respuestaTipoRecursos = new RespuestaTipoRecursoDTO();
+        var tipoRecurso = repositorioTipoRecurso.findById(tipoRecursoId).get();
+        var list = repositorioRecurso.findRecursoBytipoRecursoId(tipoRecursoId);
+        respuestaTipoRecursos.setListTipoRecurso(mapper.fromCollectionList(list));
+        respuestaTipoRecursos.setTipoRecurso(tipoRecurso.getNombreTipoRecurso());
+        return respuestaTipoRecursos;
     }
 
 

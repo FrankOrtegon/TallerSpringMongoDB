@@ -68,7 +68,7 @@ public class ControladorCRUD {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @DeleteMapping("/eliminarcateogria/{id}")
+    @DeleteMapping("/eliminarcategoria/{id}")
     public ResponseEntity eliminarCategoria(@PathVariable("id") String id){
         try{
             servicioCRUD.eliminarCategoria(id);
@@ -102,7 +102,7 @@ public class ControladorCRUD {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
-    
+
 }
 
 

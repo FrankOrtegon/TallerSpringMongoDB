@@ -33,7 +33,7 @@ public class Recurso {
         this.disponible = disponible;
     }
 
-    public String getFecha() {
+   public String getFecha() {
         return fecha;
     }
 

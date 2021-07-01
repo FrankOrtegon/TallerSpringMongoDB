@@ -3,6 +3,7 @@ package com.sofka.biblioteca.dto;
 import java.util.List;
 
 public class RespuestaCategoriaDTO {
+
     private String categoria;
     private List<RecursoDTO> recursosCategoria;
 

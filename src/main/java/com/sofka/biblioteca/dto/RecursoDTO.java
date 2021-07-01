@@ -31,7 +31,7 @@ public class RecursoDTO {
         this.disponible = disponible;
     }
 
-    public String getFecha() {
+   public String getFecha() {
 
         return fecha;
     }

@@ -4,7 +4,7 @@ public class TipoRecursoDTO {
 
     private String tipoRecursoId;
     private String nombreTipoRecurso;
-    private String categoriaId;
+
 
     public TipoRecursoDTO() {
     }
@@ -25,11 +25,4 @@ public class TipoRecursoDTO {
         this.nombreTipoRecurso = nombreTipoRecurso;
     }
 
-    public String getCategoriaId() {
-        return categoriaId;
-    }
-
-    public void setCategoriaId(String categoriaId) {
-        this.categoriaId = categoriaId;
-    }
 }

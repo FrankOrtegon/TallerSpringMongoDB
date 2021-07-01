@@ -1,7 +1,9 @@
 package com.sofka.biblioteca.controllers;
 
 import com.sofka.biblioteca.dto.RecursoDTO;
+import com.sofka.biblioteca.dto.RespuestaCategoriaDTO;
 import com.sofka.biblioteca.dto.RespuestaRecursoDTO;
+import com.sofka.biblioteca.dto.RespuestaTipoRecursoDTO;
 import com.sofka.biblioteca.service.ServicioRecurso;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,7 +47,24 @@ public class ControladorRecurso {
         return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
 
+    @GetMapping("/listaporcategoria/{id}")
+    public ResponseEntity<RespuestaCategoriaDTO> listarPorCategoria(@PathVariable("id") String id){
+        var repuesta = servicioRecurso.consultarPorCategoria(id);
+        if(repuesta.getRecursosCategoria().size() == 0){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(repuesta, HttpStatus.OK);
+    }
 
+
+    @GetMapping("/listatiporecurso/{id}")
+    public ResponseEntity<RespuestaTipoRecursoDTO> listarPorTipoRecurso(@PathVariable("id") String id) {
+        var respuesta = servicioRecurso.consultarPorTipoRecurso(id);
+        if(respuesta.getListTipoRecurso().size() == 0) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(respuesta, HttpStatus.OK);
+    }
 
 
 }
