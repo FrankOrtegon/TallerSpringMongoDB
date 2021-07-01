@@ -13,7 +13,6 @@ import com.sofka.biblioteca.repositories.RepositorioCategoria;
 import com.sofka.biblioteca.repositories.RepositorioRecurso;
 import com.sofka.biblioteca.repositories.RepositorioTipoRecurso;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Id;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -89,6 +88,11 @@ public class ServicioCRUD {
 
     public void eliminarTipoRecurso(String id) {
         repositorioTipoRecurso.deleteById(id);
+    }
+
+    public List<RecursoDTO> listarRecursos(){
+        var list = repositorioRecurso.findAll();
+        return mapper.fromCollectionList(list);
     }
 
 }
