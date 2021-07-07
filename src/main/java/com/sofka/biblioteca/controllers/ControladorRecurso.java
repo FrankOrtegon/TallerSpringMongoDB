@@ -32,7 +32,7 @@ public class ControladorRecurso {
     public ResponseEntity<RespuestaRecursoDTO>prestarRecurso(@PathVariable("id") String id){
         RespuestaRecursoDTO respuesta = servicioRecurso.prestarRecurso(id);
         if(respuesta != null){
-            return new ResponseEntity(respuesta, HttpStatus.OK);
+            return new ResponseEntity<>(respuesta, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
     }
